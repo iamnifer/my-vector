@@ -1,6 +1,8 @@
 // @iamnifer
 #include <algorithm>
+#include <chrono>
 #include <iostream>
+#include <random>
 
 #include "myvector.h"
 
@@ -97,6 +99,68 @@ void sorting_works() {
     print(v2);
 }
 
+std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+
+struct sus {
+    sus() : val(3, 3) {}
+    std::vector<int> val;
+};
+
+void big_random_methods() {
+    MyVector<sus> a, b;
+    int its = 10000;
+    for (int i = 0; i < its; ++i) {
+        switch (std::uniform_int_distribution<int>(1, 6)(rng)) {
+            case 1:
+                a.emplace_back();
+                break;
+            case 2:
+                if (!a.empty()) {
+                    a.pop_back();
+                }
+                break;
+            case 3:
+                a = std::move(b); break;
+            case 4:
+                a = b; break;
+            case 5:
+                std::swap(a, b); break;
+            case 6:
+                a.resize(rng() % 100); break;
+        }
+    }
+}
+
+constexpr int throw_cnt = 5;
+struct amogus {
+    amogus(int x = 0) : val(x) {
+        if (++total >= throw_cnt) {
+            throw std::runtime_error("O _ O");
+        }
+    }
+    amogus& operator=(const amogus& other) {
+        val = other.val;
+        if (++total >= throw_cnt) {
+            throw std::runtime_error("T w T");
+        }
+        return *this;
+    }
+    static int total;
+    int val;
+};
+int amogus::total = 0;
+
+
+void constructor_or_copying_throws() {
+    amogus::total = 0;
+    try {
+        MyVector<amogus> v(1);
+        v.push_back(2);
+    } catch (...) {
+        std::cout << "ok\n";
+    }
+}
+
 int main() {
     // some random tests
     test(basic_constructors);
@@ -106,4 +170,6 @@ int main() {
     test(range_based_for_works);
     test(basic_methods);
     test(sorting_works);
+    test(big_random_methods);
+    test(constructor_or_copying_throws);
 }

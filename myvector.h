@@ -142,9 +142,15 @@ private:
             ++new_cap;
         }
         T *new_data_ = new T[new_cap];
-        for (size_t i = 0; i < size_; i++) {
-            new_data_[i] = data_[i];
+        try {
+            for (size_t i = 0; i < size_; i++) {
+                new_data_[i] = data_[i];
+            }
+        } catch (...) {
+            delete[] new_data_;
+            throw std::runtime_error("error while copying in reallocate()");
         }
+
         delete[] data_;
         data_ = new_data_;
         capacity_ = new_cap;
