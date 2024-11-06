@@ -161,6 +161,21 @@ void constructor_or_copying_throws() {
     }
 }
 
+void type_throws_in_constructor() {
+    amogus::total = 0;
+    try {
+        MyVector<amogus> v(3, 1);
+    } catch(...) {
+        std::cout << "threw\n";
+    }
+    amogus::total = 0;
+    try {
+        MyVector<amogus> v = {1, 2};
+    } catch(...) {
+        std::cout << "threw\n";
+    }
+}
+
 int main() {
     // some random tests
     test(basic_constructors);
@@ -172,4 +187,5 @@ int main() {
     test(sorting_works);
     test(big_random_methods);
     test(constructor_or_copying_throws);
+    test(type_throws_in_constructor);
 }

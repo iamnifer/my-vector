@@ -10,7 +10,7 @@ public:
     }
     explicit MyVector(size_t size) : size_(size), capacity_(size), data_(new T[size]) {
     }
-    MyVector(size_t size, const T &value_) : size_(size), capacity_(size), data_(new T[size]) {
+    MyVector(size_t size, const T &value_) : MyVector(size) {
         for (size_t i = 0; i < size; i++) {
             data_[i] = value_;
         }
@@ -21,9 +21,8 @@ public:
             push_back(value);
         }
     }
-    MyVector(const MyVector &other)
-        : size_(other.size_), capacity_(other.capacity_), data_(nullptr) {
-        data_ = new T[capacity_];
+    MyVector(const MyVector &other) : MyVector(other.size()) {
+        // data_ = new T[capacity_];
         for (size_t i = 0; i < size_; i++) {
             data_[i] = other.data_[i];
         }
@@ -67,6 +66,7 @@ public:
     }
 
     ~MyVector() {
+        // std::cout << "called\n";
         delete[] data_;
     }
 
